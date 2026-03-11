@@ -1,0 +1,8 @@
+제목 : {{title}}
+내용 : {{description}}
+알림 시간 : {{alarm_time}}
+작성 일자 : {{date}}
+작성 시간 : {{time}}
+구글 캘린더 이름 : {{calendar_name}}
+대분류 이름 : {{category_name}}
+하위분류 이름 : {{sub_category_name}}
