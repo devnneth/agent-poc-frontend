@@ -8,6 +8,9 @@ Built on React and Vite, it provides an interface to chat with an AI agent and m
 
 Backend Project: https://github.com/devnneth/agent-poc-backend
 
+You can find the development story of this project on the blog below.
+- Development Log (PoC Log) : [blog.develosopher.dev](https://blog.develosopher.dev/search/?q=PoC+%EA%B8%B0%EB%A1%9D)
+
 ## 1. Development Environment Setup Guide
 
 ### 1.1. Node.js Setup

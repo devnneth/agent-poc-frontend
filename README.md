@@ -8,6 +8,9 @@ React와 Vite를 기반으로 하며, AI 에이전트와 대화하고 일정/할
 
 백엔드 프로젝트 : https://github.com/devnneth/agent-poc-backend
 
+이 프로젝트의 개발 스토리를 아래 블로그에서 확인하실 수 있습니다.
+- 개발 기록 (PoC 기록) : [blog.develosopher.dev](https://blog.develosopher.dev/search/?q=PoC+%EA%B8%B0%EB%A1%9D)
+
 ## 1. 개발 환경 설정 가이드
 
 ### 1.1. Node.js 설정
