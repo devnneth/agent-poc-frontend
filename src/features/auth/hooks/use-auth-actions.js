@@ -3,39 +3,24 @@ import { supabase } from '../../../api/supabase'
 import { authService } from '@/services/auth-service'
 import { useToast } from '@/hooks/use-toast'
 import { validatePassword } from '../../../lib/validators'
+import { useTranslation } from 'react-i18next'
 
 /**
  * 로그인 및 비밀번호 변경 관련 비즈니스 로직을 관리하는 커스텀 훅
  */
 export function useAuthActions() {
+    const { t } = useTranslation()
     const { toast } = useToast()
     const [updating, setUpdating] = useState(false)
     const [loggingOut, setLoggingOut] = useState(false)
 
     // 구글 OAuth 로그인 처리
     const handleGoogleLogin = useCallback(async () => {
-        const redirectTo = `${window.location.origin}/`
-        const { error } = await supabase.auth.signInWithOAuth({
-            provider: 'google',
-            options: {
-                redirectTo,
-                scopes: 'https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.events',
-                queryParams: {
-                    access_type: 'offline',
-                    prompt: 'consent',
-                },
-            },
+        toast({
+            title: t('auth.google_login_disabled_title'),
+            description: t('auth.google_login_disabled_desc'),
         })
-
-        if (error) {
-            console.error('구글 로그인 요청 실패:', error.message)
-            toast({
-                variant: "destructive",
-                title: "로그인 실패",
-                description: error.message,
-            })
-        }
-    }, [toast])
+    }, [t, toast])
 
     // 비밀번호 업데이트 처리
     const handlePasswordUpdate = useCallback(async (password) => {

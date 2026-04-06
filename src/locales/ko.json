@@ -9,7 +9,8 @@
     "preparing": "아직 준비 중인 화면입니다.",
     "error": "오류",
     "backend_offline": "백엔드 서버 오프라인",
-    "search": "검색"
+    "search": "검색",
+    "confirm_delete": "정말 삭제하시겠습니까?"
   },
   "calendar": {
     "title": "일정",
@@ -70,7 +71,8 @@
     "toggle_light": "라이트 모드로 전환",
     "toggle_dark": "다크 모드로 전환",
     "expand_sidebar": "사이드바 펼치기",
-    "collapse_sidebar": "사이드바 접기"
+    "collapse_sidebar": "사이드바 접기",
+    "knowledge": "지식 관리"
   },
   "auth": {
     "login_with_google": "Google로 로그인",
@@ -82,9 +84,14 @@
     "email": "이메일",
     "password": "비밀번호",
     "login_btn": "로그인",
+    "backend_checking": "백엔드 서버 상태를 확인하는 중입니다.",
+    "backend_online": "백엔드 서버 온라인",
+    "backend_offline": "백엔드 서버 오프라인",
     "back_to_select": "다른 로그인 방식 선택",
     "login_failed_title": "로그인 실패",
-    "invalid_credentials": "이메일 또는 비밀번호가 올바르지 않습니다."
+    "invalid_credentials": "이메일 또는 비밀번호가 올바르지 않습니다.",
+    "google_login_disabled_title": "구글 로그인 준비 중",
+    "google_login_disabled_desc": "구글 계정 로그인은 현재 임시로 비활성화되어 있습니다."
   },
   "chat": {
     "new_chat": "새 채팅",
@@ -242,5 +249,65 @@
     "placeholder_content": "여기에 내용을 입력하세요...",
     "delete_confirm": "정말 삭제하시겠습니까?",
     "edited_at": "편집됨"
+  },
+  "knowledge": {
+    "title": "지식 관리",
+    "desc": "AI에게 지식을 제공하여 지능을 강화하세요.",
+    "list_title": "지식 목록",
+    "add_button": "등록",
+    "add_modal_title": "지식 추가",
+    "title_label": "제목",
+    "title_placeholder": "지식의 제목을 입력하세요",
+    "desc_label": "설명",
+    "desc_placeholder": "지식에 대한 상세 설명을 입력하세요",
+    "empty_text": "등록된 지식이 없습니다.",
+    "list_empty_subtext": "우측 상단의 등록 버튼을 눌러 추가하세요.",
+    "data_list_title": "지식 데이터",
+    "upload_button": "업로드",
+    "uploading_button": "업로드 중...",
+    "edit_button": "정보수정",
+    "edit_modal_title": "지식 정보 수정",
+    "back_to_list": "목록으로 돌아가기",
+    "file_name": "파일제목",
+    "upload_date": "업로드날짜",
+    "file_size": "크기",
+    "processing_status": "상태",
+    "rag_toggle_column": "RAG 사용",
+    "rag_enabled_label": "RAG 사용",
+    "rag_enabled_description": "컬렉션을 끄면 이 컬렉션의 지식은 RAG 검색에서 제외됩니다.",
+    "rag_enabled_on": "ON",
+    "rag_enabled_off": "OFF",
+    "collection_status_label": "컬렉션 상태",
+    "collection_status_active": "활성",
+    "collection_status_inactive": "비활성",
+    "collection_rag_switch_aria": "컬렉션 RAG 사용 토글",
+    "source_rag_switch_aria": "{{name}} RAG 사용 토글",
+    "processing_status_pending": "대기 중",
+    "processing_status_ing": "처리 중",
+    "processing_status_done": "완료",
+    "processing_status_error": "오류",
+    "retry_source_confirm": "재시도하시겠습니까?",
+    "processing_error_tooltip_label": "오류 사유 보기",
+    "download_file": "파일 다운로드",
+    "delete_disabled_tooltip": "완료 전에는 삭제할 수 없습니다.",
+    "rag_disabled_tooltip": "완료 전에는 RAG 옵션을 변경할 수 없습니다.",
+    "file_size_empty": "N/A",
+    "file_empty": "업로드된 지식 데이터가 없습니다.",
+    "file_empty_subtext": "우측 상단의 업로드 버튼을 눌러 파일을 추가하세요.",
+    "toast_upload_success_title": "업로드 완료",
+    "toast_upload_success_desc": "파일이 업로드되었습니다.",
+    "toast_upload_error_desc": "파일 업로드 중 오류가 발생했습니다.",
+    "toast_download_error_desc": "파일 다운로드 중 오류가 발생했습니다.",
+    "toast_source_action_unsupported_title": "지원되지 않는 기능",
+    "toast_source_action_unsupported_desc": "배포 환경에서는 지식 등록, 정보 수정, 업로드, 삭제, RAG on/off 변경을 지원하지 않습니다. 관리자에게 문의해주세요.",
+    "toast_delete_source_success_title": "삭제 완료",
+    "toast_delete_source_success_desc": "파일이 삭제되었습니다.",
+    "toast_delete_source_error_desc": "파일 삭제 중 오류가 발생했습니다.",
+    "toast_retry_source_error_desc": "지식 데이터 재시도 중 오류가 발생했습니다.",
+    "toast_toggle_source_error_desc": "지식 데이터 on/off 변경 중 오류가 발생했습니다.",
+    "toast_update_knowledge_error_desc": "지식 정보 수정 중 오류가 발생했습니다."
+  },
+  "error": {
+    "create_failed": "등록에 실패했습니다."
   }
 }

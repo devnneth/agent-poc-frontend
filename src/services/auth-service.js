@@ -1,6 +1,8 @@
 import { supabase } from '@/api/supabase';
 
-// 환경 변수를 함수 내부에서 참조하도록 하여 테스트 시 동적 모킹을 지원합니다.
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+// 환경 변수로 헬스 체크 수행 여부를 결정합니다.
+const HEALTH_CHECK_ENABLED = import.meta.env.VITE_ENABLE_BACKEND_HEALTH_CHECK === 'true';
 
 /**
  * 전역 인증 및 토큰 관리 서비스
@@ -15,13 +17,12 @@ export const authService = {
         if (!refreshToken) return null;
 
         try {
-            const backendUrl = import.meta.env.VITE_BACKEND_URL;
-            console.log(`인증 서비스: 백엔드 갱신 요청 (${backendUrl}/api/v1/auth/refresh)`);
+            console.log(`인증 서비스: 백엔드 갱신 요청 (${BACKEND_URL}/api/v1/auth/refresh)`);
 
             // localStorage에서 보관 중인 Google 리프레시 토큰 가져오기
             const googleRefreshToken = localStorage.getItem('gplanner_google_refresh_token');
 
-            const response = await fetch(`${backendUrl}/api/v1/auth/refresh`, {
+            const response = await fetch(`${BACKEND_URL}/api/v1/auth/refresh`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -67,16 +68,14 @@ export const authService = {
      * @returns {Promise<boolean>} - 서버 도달 가능 여부
      */
     async checkBackendHealth() {
-        const healthCheckEnabled = import.meta.env.VITE_ENABLE_BACKEND_HEALTH_CHECK === 'true';
-        if (!healthCheckEnabled) {
+        if (!HEALTH_CHECK_ENABLED) {
             return true;
         }
 
         try {
-            const backendUrl = import.meta.env.VITE_BACKEND_URL;
             // 간단히 루트 경로 또는 API 베이스 경로 호출 (HEAD 메서드 권장하나, GET도 무방)
             // 여기서는 404가 뜨더라도 서버가 살아있다는 뜻이므로 응답이 오면 true
-            const response = await fetch(`${backendUrl}/health`, {
+            const response = await fetch(`${BACKEND_URL}/health`, {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' }
             });

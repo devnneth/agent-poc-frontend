@@ -83,6 +83,7 @@ VITE_HIDE_GOOGLE_LOGIN=false      # Whether to hide the Google login button
 │   ├── auth                # Authentication (Login, Signup)
 │   ├── calendar            # Schedule Management (Calendar View)
 │   ├── chat                # AI Agent Chat
+│   ├── knowledge           # Knowledge Management (Knowledge Base for RAG)
 │   ├── memos               # Memo Management
 │   ├── settings            # User Settings
 │   ├── todos               # Todo Management
@@ -93,7 +94,6 @@ VITE_HIDE_GOOGLE_LOGIN=false      # Whether to hide the Google login button
 ├── locales                 # Internationalization (i18next json)
 ├── repositories            # Data Persistence Layer (LocalStorage, Supabase)
 ├── resources               # Static Resources & Templates
-│   └── embedding           # Embedding text templates for Agent
 │
 ├── services                # Business Logic Layer
 └── main.jsx                # Frontend Entry Point
@@ -118,12 +118,6 @@ The frontend communicates with the backend Agent API. Following the backend API 
   "google_calendar_token": "string" 
 }
 ```
-
-### 4.2 Embedding Request
-
-- **Endpoint**: `POST /api/v1/agent/embedding`
-- **Request Body**: `LLMEmbeddingRequest` (Structured object including entity type and raw data)
-- **Note**: Since the backend performs formatting using services like `ScheduleService.format_schedule_for_embedding`, VITE environment settings for templates or model names (`VITE_EMBEDDING_MODEL`) are no longer required in the frontend.
 
 ## 5. Execution Scripts
 

@@ -38,6 +38,12 @@ function LoginLockModal({ open, locked, onClose }) {
     onClose?.()
   }
 
+  const backendStatusMessage = isBackendOnline === null
+    ? t('auth.backend_checking')
+    : isBackendOnline
+      ? t('auth.backend_online')
+      : t('auth.backend_offline')
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-6"
@@ -50,7 +56,7 @@ function LoginLockModal({ open, locked, onClose }) {
         onClick={(event) => event.stopPropagation()}
       >
         <p className="text-xs font-semibold uppercase tracking-[0.3em] text-stone-400 dark:text-stone-500">
-          {t('auth.login_required')}
+          {t('auth.login_btn')}
         </p>
         <h2 className="mt-3 text-2xl font-semibold text-stone-900 dark:text-stone-100">
           {t('auth.login_required')}
@@ -65,16 +71,23 @@ function LoginLockModal({ open, locked, onClose }) {
               {!HIDE_GOOGLE_LOGIN && (
                 <GoogleLoginButton onClick={handleGoogleLogin} disabled={isBackendOnline !== true} />
               )}
-              <EmailLoginButton 
+              <div className="w-full max-w-sm">
+                <EmailLoginButton 
                 onClick={() => setLoginMode('email')} 
                 disabled={isBackendOnline !== true} 
-              />
+                />
+                <p className={`mt-3 text-center text-xs font-medium ${isBackendOnline ? 'text-emerald-600 dark:text-emerald-400' : isBackendOnline === false ? 'hidden' : 'text-stone-500 dark:text-stone-400'}`}>
+                  {backendStatusMessage}
+                </p>
+              </div>
             </>
           ) : (
             <EmailLoginForm 
               onLogin={handleEmailLogin} 
               onBack={() => setLoginMode('select')}
               disabled={isBackendOnline !== true}
+              backendStatusMessage={backendStatusMessage}
+              isBackendOnline={isBackendOnline}
             />
           )}
         </div>

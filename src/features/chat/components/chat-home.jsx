@@ -25,7 +25,7 @@ function ChatHome({
   return (
     <section className="flex h-full flex-col">
       <PageHeader
-        category="Chat"
+        category={t('sidebar.chat')}
         title={t('chat.home_title')}
         description={t('chat.home_desc')}
         className="border-b pb-6"
@@ -45,7 +45,7 @@ function ChatHome({
         <div className="mb-3 flex items-end justify-between">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-500">
-              Sessions
+              {t('chat.sessions_title')}
             </p>
             <h3 className="mt-2 text-base font-semibold text-stone-800 dark:text-stone-100">
               {t('chat.sessions_title')}

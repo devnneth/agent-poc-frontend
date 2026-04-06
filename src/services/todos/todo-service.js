@@ -1,7 +1,4 @@
 import { TodoRepository } from '../../repositories/todos/todo-repository'
-import { embeddingService } from '../embedding-service'
-import { embeddingRepository } from '../../repositories/embedding-repository'
-
 // 비즈니스 로직 및 도메인 규칙을 처리하는 투두 서비스
 export const TodoService = {
   // 할일 목록 조회 — Repository 결과를 UI 포맷으로 변환
@@ -17,31 +14,7 @@ export const TodoService = {
   },
 
   // 할일 생성 — owner_user_id 포함, 기본값 설정, UI 포맷 반환
-  addTodo: async (userId, data, accessToken) => {
-    // 임베딩 생성 (실패해도 진행)
-    let embeddingId = null
-    try {
-      const embeddingVector = await embeddingService.createEmbedding({
-        payload: {
-          entity: 'TodoModel',
-          title: data.title,
-          description: data.description || '',
-          status: 'TODO',
-          priority: data.priority || 'normal',
-          project: data.project || '',
-        },
-        accessToken,
-      })
-
-      if (embeddingVector) {
-        embeddingId = await embeddingRepository.create({
-          embedding: embeddingVector,
-          modelName: import.meta.env.VITE_EMBEDDING_MODEL || 'text-embedding-3-small',
-        })
-      }
-    } catch (e) {
-      console.warn('Todo embedding flow failed:', e)
-    }
+  addTodo: async (userId, data) => {
 
     const created = await TodoRepository.create({
       owner_user_id: userId,
@@ -52,51 +25,17 @@ export const TodoService = {
       project: data.project || '',
       due_date: data.dueDate || null,
       sort_order: data.sortOrder || 0,
-      embedding_id: embeddingId,
     })
     return TodoService.convertToUIFormat(created)
   },
 
   // 할일 수정 — camelCase → snake_case 변환 후 Repository 호출
-  updateTodo: async (id, data, accessToken) => {
+  updateTodo: async (id, data) => {
     // 기존 데이터 조회
     const existing = await TodoRepository.fetchById(id)
     if (!existing) return null
 
-    // 임베딩 갱신 (실패해도 진행)
-    let embeddingId = existing.embedding_id
-    if (data.title !== undefined || data.description !== undefined) {
-      try {
-        const embeddingVector = await embeddingService.createEmbedding({
-          payload: {
-            entity: 'TodoModel',
-            title: data.title !== undefined ? data.title : existing.title,
-            description: data.description !== undefined ? data.description : existing.description,
-            status: data.status !== undefined ? data.status : existing.status,
-            priority: data.priority !== undefined ? data.priority : existing.priority,
-            project: data.project !== undefined ? data.project : existing.project,
-          },
-          accessToken,
-        })
-
-        if (embeddingVector) {
-          if (embeddingId) {
-            await embeddingRepository.update(embeddingId, {
-              embedding: embeddingVector,
-            })
-          } else {
-            embeddingId = await embeddingRepository.create({
-              embedding: embeddingVector,
-              modelName: import.meta.env.VITE_EMBEDDING_MODEL || 'text-embedding-3-small',
-            })
-          }
-        }
-      } catch (e) {
-        console.warn('Todo embedding update flow failed:', e)
-      }
-    }
-
-    const dbData = { embedding_id: embeddingId }
+    const dbData = {}
     if (data.title !== undefined) dbData.title = data.title
     if (data.description !== undefined) dbData.description = data.description
     if (data.status !== undefined) dbData.status = data.status

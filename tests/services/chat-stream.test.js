@@ -154,6 +154,50 @@ describe('Chat Stream Service', () => {
             expect(onDone).toHaveBeenCalled();
         });
 
+        it('message content 배열에서는 렌더링 가능한 텍스트만 추출해야 한다', async () => {
+            const onChunk = vi.fn();
+            const onDone = vi.fn();
+
+            const mockResponseChunks = [
+                'data: {"type":"data","category":"message","status":"end","content":[{"id":"rs_1","type":"reasoning","summary":[],"index":0},{"type":"function_call","name":"knowledge","arguments":"{}","call_id":"call_1","id":"fc_1","index":1}],"metadata":{"node":"model"}}\n',
+                'data: {"type":"data","category":"message","status":"ing","content":"좋은","metadata":{"node":"model"}}\n',
+                'data: {"type":"end"}\n'
+            ];
+
+            fetch.mockResolvedValue({
+                ok: true,
+                body: createMockStream(mockResponseChunks)
+            });
+
+            await new Promise(resolve => {
+                sendChatMessage({
+                    messages: [{ role: 'user', content: 'hello' }],
+                    accessToken: 'token',
+                    onChunk,
+                    onDone: () => {
+                        onDone();
+                        resolve();
+                    }
+                });
+            });
+
+            expect(onChunk).toHaveBeenNthCalledWith(1, {
+                type: 'data',
+                category: 'message',
+                status: 'end',
+                content: '',
+                metadata: { node: 'model' }
+            });
+            expect(onChunk).toHaveBeenNthCalledWith(2, {
+                type: 'data',
+                category: 'message',
+                status: 'ing',
+                content: '좋은',
+                metadata: { node: 'model' }
+            });
+            expect(onDone).toHaveBeenCalled();
+        });
+
         it('인증 헤더와 요청 바디가 올바르게 전송되어야 한다', async () => {
             fetch.mockResolvedValue({
                 ok: true,

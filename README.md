@@ -83,6 +83,7 @@ VITE_HIDE_GOOGLE_LOGIN=false      # 구글 로그인 버튼 숨김 여부
 │   ├── auth                # 인증 (로그인, 회원가입)
 │   ├── calendar            # 일정 관리 (캘린더 뷰)
 │   ├── chat                # AI 에이전트 채팅
+│   ├── knowledge           # 지식 관리 (RAG용 지식 베이스)
 │   ├── memos               # 메모 관리
 │   ├── settings            # 사용자 설정
 │   ├── todos               # 할일 관리
@@ -93,7 +94,6 @@ VITE_HIDE_GOOGLE_LOGIN=false      # 구글 로그인 버튼 숨김 여부
 ├── locales                 # 다국어 지원 (i18next json)
 ├── repositories            # 데이터 영속성 추상화 레이어 (LocalStorage, Supabase)
 ├── resources               # 정적 리소스 및 템플릿
-│   └── embedding           # 에이전트용 임베딩 텍스트 템플릿
 │
 ├── services                # 비즈니스 로직 처리 레이어
 └── main.jsx                # 프론트엔드 진입점
@@ -118,12 +118,6 @@ VITE_HIDE_GOOGLE_LOGIN=false      # 구글 로그인 버튼 숨김 여부
   "google_calendar_token": "string" 
 }
 ```
-
-### 4.2 임베딩 요청 (Embedding)
-
-- **Endpoint**: `POST /api/v1/agent/embedding`
-- **Request Body**: `LLMEmbeddingRequest` (엔티티 타입과 원본 데이터를 포함한 구조화된 객체)
-- **참고**: 백엔드에서 `ScheduleService.format_schedule_for_embedding` 등을 통해 직접 포맷팅을 수행하므로, 프론트엔드 환경변수에서 임베딩용 템플릿이나 모델명(`VITE_EMBEDDING_MODEL`) 설정은 더 이상 필요하지 않습니다.
 
 ## 5. 실행 스크립트
 

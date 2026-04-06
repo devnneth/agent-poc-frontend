@@ -1,9 +1,10 @@
-const DEFAULT_TIMEOUT_MS = Number.parseInt(
+﻿const DEFAULT_TIMEOUT_MS = Number.parseInt(
   import.meta.env.VITE_EMBEDDING_TIMEOUT_MS,
   10
 ) || 8000;
 const DEFAULT_PATH =
-  import.meta.env.VITE_EMBEDDING_PATH || '/api/v1/agent/embedding';
+  import.meta.env.VITE_EMBEDDING_PATH || '/api/v1/llm/embedding';
+const TEXTS_KEY = import.meta.env.VITE_EMBEDDING_TEXTS_KEY || 'texts';
 const DIMENSIONS = Number.parseInt(
   import.meta.env.VITE_EMBEDDING_DIMENSIONS,
   10

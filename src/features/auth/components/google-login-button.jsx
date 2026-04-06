@@ -1,13 +1,13 @@
 import { Button } from '@/components/ui/button'
 
 // 구글 로그인 트리거 버튼
-function GoogleLoginButton({ onClick }) {
+function GoogleLoginButton({ onClick, disabled = false }) {
   return (
     <Button
       variant="default"
       size="lg"
-      disabled={true} // 임시 비활성화
-      className="w-full max-w-sm rounded-full gap-3 py-6 shadow-xl text-primary-foreground font-bold text-base relative hover:scale-[1.02] transition-all duration-300 opacity-50 cursor-not-allowed"
+      disabled={disabled}
+      className={`w-full max-w-sm rounded-full gap-3 py-6 shadow-xl text-primary-foreground font-bold text-base relative transition-all duration-300 ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:scale-[1.02]'}`}
       onClick={onClick}
     >
       <div className="bg-white p-1.5 rounded-full flex items-center justify-center shrink-0 w-8 h-8 absolute left-2">

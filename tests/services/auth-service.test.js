@@ -12,13 +12,16 @@ vi.mock('../../src/api/supabase', () => ({
     }
 }));
 
-// Vite 환경 변수 모킹 (Vitest의 stubEnv 사용 권장)
+// Vite 환경 변수 모킹
+vi.mock('import.meta.env', () => ({
+    VITE_BACKEND_URL: 'http://localhost:8000', // 테스트용 더미 URL
+    VITE_ENABLE_BACKEND_HEALTH_CHECK: 'true'
+}));
+
 describe('Auth Service', () => {
-    const BACKEND_URL = 'http://localhost:8000';
+    const BACKEND_URL = 'http://localhost:8000'; // auth-service.js 내부 로직과 일치시킴 (실제 모듈은 import.meta.env를 사용)
 
     beforeEach(() => {
-        vi.stubEnv('VITE_BACKEND_URL', BACKEND_URL);
-        vi.stubEnv('VITE_ENABLE_BACKEND_HEALTH_CHECK', 'true');
         vi.stubGlobal('fetch', vi.fn());
         vi.spyOn(console, 'error').mockImplementation(() => { }); // 콘솔 에러 숨김
         vi.spyOn(console, 'warn').mockImplementation(() => { }); // 콘솔 경고 숨김

@@ -5,15 +5,21 @@ import { supabase } from '../../api/supabase'
  */
 class MemoRepository {
   /**
-   * 모든 메모를 가져옵니다.
+   * 모든 메모를 가져옵니다. 필요 시 검색어를 통해 필터링합니다.
    */
-  async getAll(userId) {
-    const { data, error } = await supabase
+  async getAll(userId, searchQuery = '') {
+    let query = supabase
       .from('memos')
       .select('*')
       .eq('owner_user_id', userId)
       .is('deleted_at', null)
       .order('updated_at', { ascending: false })
+
+    if (searchQuery) {
+      query = query.or(`title.ilike.%${searchQuery}%,content.ilike.%${searchQuery}%`)
+    }
+
+    const { data, error } = await query
 
     if (error) throw error
     return data

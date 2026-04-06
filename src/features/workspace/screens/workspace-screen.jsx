@@ -9,6 +9,7 @@ import { CalendarScreen } from '../../calendar/screens/calendar-screen'
 import { CalendarSettingsScreen } from '../../settings/screens/calendar-settings-screen'
 import { TodoScreen } from '../../todos/screens/todo-screen'
 import { MemoScreen } from '../../memos/screens/memo-screen'
+import { KnowledgeScreen } from '../../knowledge/screens/knowledge-screen'
 import { useWorkspace } from '../hooks/use-workspace'
 import { BackendStatusIndicator } from '../../../components/ui/backend-status-indicator'
 
@@ -44,6 +45,8 @@ function WorkspaceScreen({ session, theme, onToggleTheme }) {
     mainContent = <MemoScreen />
   } else if (activeTab === 'settings') {
     mainContent = <CalendarSettingsScreen />
+  } else if (activeTab === 'knowledge') {
+    mainContent = <KnowledgeScreen />
   } else if (activeTab !== 'chat') {
     mainContent = <EmptyPanel title={t(workspaceTabLabels[activeTab])} />
   }

@@ -1,4 +1,4 @@
-﻿import { MessageSquare, Calendar, CheckSquare, StickyNote, Settings, LogOut, ChevronLeft, ChevronRight } from 'lucide-react'
+import { MessageSquare, Calendar, CheckSquare, StickyNote, Settings, LogOut, ChevronLeft, ChevronRight, BookOpen } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { MenuItem } from './menu-item'
 
@@ -116,12 +116,25 @@ function Sidebar({
       <div className={`space-y-2 border-t border-stone-200 pt-6 dark:border-stone-800 ${collapsed ? 'px-0' : ''}`}>
         <button
           type="button"
+          onClick={() => onSelectTab('knowledge')}
+          disabled={navigationLocked}
+          title={collapsed ? t('sidebar.knowledge') : undefined}
+          className={`flex w-full items-center ${collapsed ? 'justify-center px-2' : 'gap-3 px-4'} rounded-2xl border py-3 text-left text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-60 ${activeTab === 'knowledge'
+            ? 'bg-stone-900 border-stone-900 text-white dark:bg-stone-100 dark:border-stone-100 dark:text-stone-900'
+            : 'border-transparent text-stone-600 hover:border-stone-200 hover:text-stone-900 dark:text-stone-300 dark:hover:border-stone-700 dark:hover:text-stone-100'
+            }`}
+        >
+          <BookOpen className="h-5 w-5 flex-shrink-0" />
+          {!collapsed && <span className="truncate">{t('sidebar.knowledge')}</span>}
+        </button>
+        <button
+          type="button"
           onClick={() => onSelectTab('settings')}
           disabled={navigationLocked}
           title={collapsed ? t('sidebar.settings_security') : undefined}
           className={`flex w-full items-center ${collapsed ? 'justify-center px-2' : 'gap-3 px-4'} rounded-2xl border py-3 text-left text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-60 ${activeTab === 'settings'
             ? 'bg-stone-900 border-stone-900 text-white dark:bg-stone-100 dark:border-stone-100 dark:text-stone-900'
-            : 'border-stone-200 text-stone-600 hover:border-stone-300 hover:text-stone-900 dark:border-stone-700 dark:text-stone-300 dark:hover:border-stone-500 dark:hover:text-stone-100'
+            : 'border-transparent text-stone-600 hover:border-stone-200 hover:text-stone-900 dark:text-stone-300 dark:hover:border-stone-700 dark:hover:text-stone-100'
             }`}
         >
           <Settings className="h-5 w-5 flex-shrink-0" />
@@ -132,7 +145,7 @@ function Sidebar({
           onClick={onLogout}
           disabled={loggingOut || navigationLocked}
           title={collapsed ? (loggingOut ? t('sidebar.logging_out') : t('sidebar.logout')) : undefined}
-          className={`flex w-full items-center ${collapsed ? 'justify-center px-2' : 'gap-3 px-4'} rounded-2xl border border-stone-200 py-3 text-left text-sm font-semibold text-stone-600 transition hover:border-stone-300 hover:text-stone-900 disabled:cursor-not-allowed disabled:opacity-60 dark:border-stone-700 dark:text-stone-300 dark:hover:border-stone-500 dark:hover:text-stone-100`}
+          className={`flex w-full items-center ${collapsed ? 'justify-center px-2' : 'gap-3 px-4'} rounded-2xl border border-transparent py-3 text-left text-sm font-semibold text-stone-600 transition hover:border-stone-200 hover:text-stone-900 disabled:cursor-not-allowed disabled:opacity-60 dark:text-stone-300 dark:hover:border-stone-700 dark:hover:text-stone-100`}
         >
           <LogOut className="h-5 w-5 flex-shrink-0" />
           {!collapsed && <span className="truncate">{loggingOut ? t('sidebar.logging_out') : t('sidebar.logout')}</span>}

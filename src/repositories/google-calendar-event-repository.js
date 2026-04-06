@@ -6,16 +6,23 @@ export const googleCalendarEventRepository = {
    * 기간 내 이벤트 목록 조회 (소프트 삭제 제외)
    * @param {string} startAt - ISO 8601 시작 시각
    * @param {string} endAt - ISO 8601 종료 시각
+   * @param {string} [searchQuery=''] - 검색어 필터
    * @returns {Promise<Array>}
    */
-  async findByPeriod(startAt, endAt) {
-    const { data, error } = await supabase
+  async findByPeriod(startAt, endAt, searchQuery = '') {
+    let query = supabase
       .from('google_calendar_events')
       .select('*')
       .gte('start_at', startAt)
       .lte('end_at', endAt)
       .is('deleted_at', null)
       .order('start_at', { ascending: true });
+
+    if (searchQuery) {
+      query = query.or(`summary.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%`);
+    }
+
+    const { data, error } = await query;
 
     if (error) throw error;
     return data;
@@ -40,7 +47,7 @@ export const googleCalendarEventRepository = {
 
   /**
    * 이벤트 생성
-   * @param {Object} eventData - { google_calendar_id, google_event_id?, owner_user_id, summary, description?, color_id?, icon?, start_at, end_at, embedding_id? }
+   * @param {Object} eventData - { google_calendar_id, google_event_id?, owner_user_id, summary, description?, color_id?, icon?, start_at, end_at }
    * @returns {Promise<Object>} 생성된 이벤트
    */
   async create(eventData) {

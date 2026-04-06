@@ -17,6 +17,9 @@ export const TodoRepository = {
 
     if (filters.status) query = query.eq('status', filters.status)
     if (filters.priority) query = query.eq('priority', filters.priority)
+    if (filters.searchQuery) {
+      query = query.or(`title.ilike.%${filters.searchQuery}%,description.ilike.%${filters.searchQuery}%`)
+    }
 
     const { data, error } = await query
     if (error) throw error

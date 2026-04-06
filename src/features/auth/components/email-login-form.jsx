@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 /**
  * 이메일과 비밀번호를 입력받아 로그인을 시도하는 폼 컴포넌트
  */
-function EmailLoginForm({ onLogin, onBack, disabled }) {
+function EmailLoginForm({ onLogin, onBack, disabled, backendStatusMessage, isBackendOnline }) {
   const { t } = useTranslation()
   const [email, setEmail] = useState('lastsky@gmail.com')
   const [password, setPassword] = useState('')
@@ -61,6 +61,9 @@ function EmailLoginForm({ onLogin, onBack, disabled }) {
         >
           {loading ? t('common.loading') : t('auth.login_btn')}
         </button>
+        <p className={`text-center text-xs font-medium ${isBackendOnline ? 'text-emerald-600 dark:text-emerald-400' : isBackendOnline === false ? 'hidden' : 'text-stone-500 dark:text-stone-400'}`}>
+          {backendStatusMessage}
+        </p>
       </form>
       <button
         type="button"

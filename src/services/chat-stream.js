@@ -1,5 +1,38 @@
 const DEFAULT_ERROR_MESSAGE = "Failed to get response. Please try again later.";
 
+// 스트림 payload의 content를 UI에 표시 가능한 문자열로 정규화한다
+function normalizeContent(content) {
+  if (typeof content === "string") {
+    return content;
+  }
+
+  if (Array.isArray(content)) {
+    return content
+      .map((item) => {
+        if (typeof item === "string") {
+          return item;
+        }
+
+        if (!item || typeof item !== "object") {
+          return "";
+        }
+
+        if (item.type === "output_text" && typeof item.text === "string") {
+          return item.text;
+        }
+
+        if (typeof item.content === "string") {
+          return item.content;
+        }
+
+        return "";
+      })
+      .join("");
+  }
+
+  return "";
+}
+
 // 백엔드 URL을 환경변수에서 읽어온다
 function getBackendUrl() {
   const baseUrl = import.meta.env.VITE_BACKEND_URL || "";
@@ -48,7 +81,7 @@ function parseDataPayload(payload) {
         type: parsed.type,
         category: parsed.category || "",
         status: parsed.status || "",
-        content: parsed.content || "",
+        content: normalizeContent(parsed.content),
         metadata: parsed.metadata || {}
       };
     }

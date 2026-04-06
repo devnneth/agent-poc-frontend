@@ -1,4 +1,4 @@
-﻿const workspaceTabs = [
+const workspaceTabs = [
   { key: 'chat', label: 'sidebar.chat' },
   { key: 'schedule', label: 'sidebar.schedule' },
   { key: 'todo', label: 'sidebar.todo' },
@@ -8,7 +8,8 @@
 const workspaceTabLabels = {
   chat: 'sidebar.chat',
   schedule: 'sidebar.schedule',
-  settings: 'sidebar.settings',
+  knowledge: 'sidebar.knowledge',
+  settings: 'sidebar.settings_security',
   todo: 'sidebar.todo',
   memo: 'sidebar.memo',
   password: 'settings.password',

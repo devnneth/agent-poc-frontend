@@ -1,7 +1,5 @@
 import { googleCalendarEventRepository } from '../repositories/google-calendar-event-repository';
 import { googleCalendarApi } from '../api/google/calendar';
-import { embeddingService } from './embedding-service';
-import { embeddingRepository } from '../repositories/embedding-repository';
 import { addDays, parseISO, format } from 'date-fns';
 
 // 일정을 google_calendar_events DB와 Google Calendar에 동기화하여 저장하는 서비스
@@ -19,29 +17,6 @@ export const calendarService = {
         const { token, refreshToken, onTokenRefreshed } = user;
         const { calendarId } = gcalConfig;
 
-        // 임베딩 생성 (실패해도 진행)
-        let embeddingId = null;
-        try {
-            const embeddingVector = await embeddingService.createEmbedding({
-                payload: {
-                    entity: 'GoogleCalendarEventModel',
-                    summary: input.summary,
-                    description: input.description ?? '',
-                    start_at: input.start_at,
-                    end_at: input.end_at,
-                },
-                accessToken: user.accessToken,
-            });
-
-            if (embeddingVector) {
-                embeddingId = await embeddingRepository.create({
-                    embedding: embeddingVector,
-                    modelName: import.meta.env.VITE_EMBEDDING_MODEL || 'text-embedding-3-small',
-                });
-            }
-        } catch (e) {
-            console.warn('Embedding flow failed:', e);
-        }
 
         // 1. GCal 전송
         let gcalResult = { id: null };
@@ -69,7 +44,6 @@ export const calendarService = {
                 icon: input.icon ?? null,
                 start_at: input.start_at ? new Date(input.start_at).toISOString() : null,
                 end_at: input.end_at ? new Date(input.end_at).toISOString() : null,
-                embedding_id: embeddingId,
             });
         } catch (e) {
             // DB 저장 실패 시 GCal 이벤트 롤백 (토큰이 있을 때만)
@@ -104,10 +78,10 @@ export const calendarService = {
     },
 
     /**
-     * 기간 내 일정 조회 후 UI 포맷으로 변환
+     * 기간 내 일정 조회 후 UI 포맷으로 변환. 필요 시 검색어로 필터링.
      */
-    async fetchSchedules(startAt, endAt) {
-        const events = await googleCalendarEventRepository.findByPeriod(startAt, endAt);
+    async fetchSchedules(startAt, endAt, searchQuery = '') {
+        const events = await googleCalendarEventRepository.findByPeriod(startAt, endAt, searchQuery);
         return events.map((event) => this.convertToUIFormat(event));
     },
 
@@ -142,35 +116,6 @@ export const calendarService = {
         // 1. DB에서 현재 이벤트 조회
         const existing = await googleCalendarEventRepository.findById(eventId);
 
-        // 임베딩 갱신 (실패해도 진행)
-        let embeddingId = existing?.embedding_id;
-        try {
-            const embeddingVector = await embeddingService.createEmbedding({
-                payload: {
-                    entity: 'GoogleCalendarEventModel',
-                    summary: input.summary,
-                    description: input.description ?? '',
-                    start_at: input.start_at,
-                    end_at: input.end_at,
-                },
-                accessToken: user.accessToken,
-            });
-
-            if (embeddingVector) {
-                if (embeddingId) {
-                    await embeddingRepository.update(embeddingId, {
-                        embedding: embeddingVector,
-                    });
-                } else {
-                    embeddingId = await embeddingRepository.create({
-                        embedding: embeddingVector,
-                        modelName: import.meta.env.VITE_EMBEDDING_MODEL || 'text-embedding-3-small',
-                    });
-                }
-            }
-        } catch (e) {
-            console.warn('Embedding update flow failed:', e);
-        }
 
         // 2. GCal 업데이트
         if (token && existing?.google_event_id) {
@@ -197,7 +142,6 @@ export const calendarService = {
             icon: input.icon ?? existing?.icon ?? null,
             start_at: input.start_at ? new Date(input.start_at).toISOString() : null,
             end_at: input.end_at ? new Date(input.end_at).toISOString() : null,
-            embedding_id: embeddingId,
         });
 
         return updated;

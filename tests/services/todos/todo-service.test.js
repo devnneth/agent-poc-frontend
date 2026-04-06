@@ -109,7 +109,6 @@ describe('TodoService', () => {
         title: '수정된 제목',
         due_date: '2026-04-01',
         sort_order: 2,
-        embedding_id: undefined
       })
       expect(result).toEqual(UI_TODO)
     })
@@ -124,7 +123,6 @@ describe('TodoService', () => {
       expect(calledArg).not.toHaveProperty('due_date')
       expect(calledArg).not.toHaveProperty('sort_order')
       expect(calledArg).toHaveProperty('title', '제목만 수정')
-      expect(calledArg).toHaveProperty('embedding_id')
     })
   })
 

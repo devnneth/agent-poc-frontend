@@ -86,13 +86,13 @@ export function useChat(
     [],
   );
 
-  // 세션 동기화
+  // 세션 동기화 (상태 업데이트만 담당)
   const syncSessions = useCallback(
     (update) => {
       setSessions((prev) => {
         const next = typeof update === "function" ? update(prev) : update;
         const sorted = sortSessions(next);
-        saveSessions(sorted);
+        // saveSessions(sorted); // <-- 동기 저장 제거 (성능 최적화)
         setActiveSessionId((prevActive) => {
           if (!prevActive) return prevActive;
           const exists = sorted.some((item) => item.id === prevActive);
@@ -104,11 +104,11 @@ export function useChat(
     [sortSessions],
   );
 
-  // 메시지 동기화
+  // 메시지 동기화 (상태 업데이트만 담당)
   const syncMessages = useCallback((update) => {
     setMessages((prev) => {
       const next = typeof update === "function" ? update(prev) : update;
-      saveMessages(next);
+      // saveMessages(next); // <-- 동기 저장 제거 (성능 최적화)
       return next;
     });
   }, []);
@@ -257,7 +257,7 @@ export function useChat(
           }
 
           // 2. 메시지 본문 누적 (Message 카테고리)
-          if (!background && category === "message" && content) {
+          if (!background && category === "message" && typeof content === "string" && content) {
             accumulated += content;
             patchMessage(assistantId, { content: accumulated });
           }
@@ -660,6 +660,28 @@ export function useChat(
       syncHistoryState(null, { replace: true });
     }
   }, [activeSessionId, syncHistoryState]);
+
+  // 로컬 저장소 동기화 (디바운스 적용)
+  // 스트리밍 중 과도한 I/O를 방지하기 위해 1초 지연 후 저장한다.
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      saveSessions(sessions);
+      saveMessages(messages);
+    }, 1000);
+
+    // 페이지 이탈 시 즉시 저장하여 데이터 유실 방지
+    const handleSyncOnUnload = () => {
+      saveSessions(sessions);
+      saveMessages(messages);
+    };
+
+    window.addEventListener("beforeunload", handleSyncOnUnload);
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("beforeunload", handleSyncOnUnload);
+    };
+  }, [sessions, messages]);
 
   return {
     sessions,

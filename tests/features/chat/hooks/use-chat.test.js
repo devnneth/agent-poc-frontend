@@ -46,6 +46,7 @@ describe('useChat Hook', () => {
 
     beforeEach(() => {
         vi.clearAllMocks();
+        vi.useFakeTimers();
 
         // Repository 기본 반환값 설정
         chatRepo.loadSessions.mockReturnValue([]);
@@ -154,6 +155,11 @@ describe('useChat Hook', () => {
         // 삭제 실행
         await act(async () => {
             await result.current.handleDeleteSession();
+        });
+
+        // 타이머 진행 (디바운스 대기)
+        act(() => {
+            vi.advanceTimersByTime(1000);
         });
 
         expect(result.current.sessions).toHaveLength(0);
